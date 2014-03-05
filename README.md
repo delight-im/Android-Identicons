@@ -13,7 +13,16 @@ Simple implementation of Identicons for Android
 ### Layout (XML)
 
 ```
-<im.delight.android.identicons.Identicon
+<im.delight.android.identicons.SymmetricIdenticon
+	android:id="@+id/identicon"
+	android:layout_width="48dp"
+	android:layout_height="48dp" />
+```
+
+or
+
+```
+<im.delight.android.identicons.AsymmetricIdenticon
 	android:id="@+id/identicon"
 	android:layout_width="48dp"
 	android:layout_height="48dp" />
@@ -24,6 +33,10 @@ Simple implementation of Identicons for Android
 ```
 Identicon identicon = (Identicon) findViewById(R.id.identicon);
 identicon.show("john.doe@example.org");
+// identicon.show(myObject);
+// identicon.show(42);
+// identicon.show(System.currentTimeMillis());
+// identicon.show(true);
 ```
 
 ## License
