@@ -66,13 +66,18 @@ abstract public class Identicon extends View {
 	}
 
 	public void show(String input) {
-		try {
-			final MessageDigest digest = java.security.MessageDigest.getInstance(HASH_ALGORITHM);
-			digest.update(input == null ? new byte[0] : input.getBytes());
-			mHash = digest.digest();
+		if (input == null) {
+			mHash = null;
 		}
-		catch (Exception e) {
-			mHash = new byte[1];
+		else {
+			try {
+				final MessageDigest digest = java.security.MessageDigest.getInstance(HASH_ALGORITHM);
+				digest.update(input == null ? new byte[0] : input.getBytes());
+				mHash = digest.digest();
+			}
+			catch (Exception e) {
+				mHash = null;
+			}
 		}
 		
 		setupColors();
@@ -108,7 +113,12 @@ abstract public class Identicon extends View {
 	}
 	
 	public void show(Object input) {
-		show(String.valueOf(input));
+		if (input == null) {
+			mHash = null;
+		}
+		else {
+			show(String.valueOf(input));
+		}
 	}
 	
 	protected void setupColors() {
@@ -128,7 +138,12 @@ abstract public class Identicon extends View {
 	}
 	
 	protected byte getByte(int index) {
-		return mHash[index % mHash.length];
+		if (mHash == null) {
+			return -128;
+		}
+		else {
+			return mHash[index % mHash.length];
+		}
 	}
 	
 	abstract protected int getRowCount();
