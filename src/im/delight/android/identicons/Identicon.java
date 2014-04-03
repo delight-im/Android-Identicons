@@ -34,6 +34,7 @@ abstract public class Identicon extends View {
 	private int mCellHeight;
 	private byte[] mHash;
 	private int[][] mColors;
+	private boolean mReady;
 
 	public Identicon(Context context) {
 		super(context);
@@ -62,7 +63,7 @@ abstract public class Identicon extends View {
 		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
 
-		setWillNotDraw(true);
+		mReady = false;
 	}
 
 	public void show(String input) {
@@ -81,7 +82,7 @@ abstract public class Identicon extends View {
 		}
 		
 		setupColors();
-		setWillNotDraw(false);
+		mReady = true;
 	}
 	
 	public void show(int input) {
@@ -172,7 +173,7 @@ abstract public class Identicon extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		if (mColors != null) {
+		if (mReady) {
 			int x, y;
 			for (int r = 0; r < mRowCount; r++) {
 				for (int c = 0; c < mColumnCount; c++) {
