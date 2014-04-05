@@ -17,60 +17,78 @@ package im.delight.android.identicons;
  */
 
 import java.security.MessageDigest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
 abstract public class Identicon extends View {
 	
 	private static final String HASH_ALGORITHM = "SHA-256";
-	private Paint mPaint;
 	private final int mRowCount;
 	private final int mColumnCount;
-	private int mCellWidth;
-	private int mCellHeight;
-	private byte[] mHash;
-	private int[][] mColors;
-	private boolean mReady;
+	private final Paint mPaint;
+	private volatile int mCellWidth;
+	private volatile int mCellHeight;
+	private volatile byte[] mHash;
+	private volatile int[][] mColors;
+	private volatile boolean mReady;
 
 	public Identicon(Context context) {
 		super(context);
+
 		mRowCount = getRowCount();
 		mColumnCount = getColumnCount();
+		mPaint = new Paint();
+
 		init();
 	}
 
 	public Identicon(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
 		mRowCount = getRowCount();
 		mColumnCount = getColumnCount();
+		mPaint = new Paint();
+
 		init();
 	}
 
 	public Identicon(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+
 		mRowCount = getRowCount();
 		mColumnCount = getColumnCount();
+		mPaint = new Paint();
+
 		init();
 	}
 		
+	@SuppressLint("NewApi")
 	protected void init() {
-		mPaint = new Paint();
 		mPaint.setStyle(Paint.Style.FILL);
 		mPaint.setAntiAlias(true);
 		mPaint.setDither(true);
-
-		mReady = false;
+		
+		setWillNotDraw(false);
+		if (Build.VERSION.SDK_INT >= 11) {
+			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 	}
 
 	public void show(String input) {
+		// if the input was null
 		if (input == null) {
+			// we can't create a hash value and have nothing to show (draw to the view)
 			mHash = null;
 		}
+		// if the input was a proper string (non-null)
 		else {
+			// generate a hash from the string to get unique but deterministic byte values 
 			try {
 				final MessageDigest digest = java.security.MessageDigest.getInstance(HASH_ALGORITHM);
 				digest.update(input == null ? new byte[0] : input.getBytes());
@@ -81,8 +99,12 @@ abstract public class Identicon extends View {
 			}
 		}
 		
+		// set up the cell colors according to the input that was provided via show(...)
 		setupColors();
+		
+		// this view may now be drawn (and thus must be re-drawn)
 		mReady = true;
+		invalidate();
 	}
 	
 	public void show(int input) {
