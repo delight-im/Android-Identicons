@@ -1,6 +1,6 @@
 # Android-Identicons
 
-Simple implementation of Identicons for Android
+[Identicons](http://en.wikipedia.org/wiki/Identicon) for Android — turn any data into a visual hash
 
 ## Installation
 
@@ -38,6 +38,16 @@ identicon.show("john.doe@example.org");
 // identicon.show(System.currentTimeMillis());
 // identicon.show(true);
 ```
+
+## Other languages
+
+These are implementations in other languages, which may be similar but generally not related:
+
+ * [JavaScript](https://github.com/stewartlord/identicon.js)
+ * [Ruby](https://github.com/chrisbranson/ruby_identicon)
+ * [Java](https://github.com/donpark/identicon)
+ * [PHP](https://github.com/yzalis/Identicon)
+ * [Go](https://github.com/cupcake/sigil)
 
 ## License
 
